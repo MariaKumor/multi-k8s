@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: client-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       component: web
@@ -17,3 +17,10 @@ spec:
           image: mkumor/multi-client-k8s:latest
           ports:
             - containerPort: 3000
+          resources:          # <-- tutaj ustawiasz requests i limits
+            requests:
+              cpu: "100m"      # minimalne zasoby, które pod "rezerwuje"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"      # maksymalne zasoby, które pod może użyć
+              memory: "256Mi"

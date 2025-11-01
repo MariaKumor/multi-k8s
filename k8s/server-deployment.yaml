@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: server-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       component: server
@@ -35,3 +35,10 @@ spec:
                 secretKeyRef:
                   name: pgpassword
                   key: PGPASSWORD
+          resources:          # <-- tutaj ustawiasz requests i limits
+            requests:
+              cpu: "100m"      # minimalne zasoby, które pod "rezerwuje"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"      # maksymalne zasoby, które pod może użyć
+              memory: "256Mi"
