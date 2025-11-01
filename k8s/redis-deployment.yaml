@@ -17,3 +17,10 @@ spec:
           image: redis
           ports:
             - containerPort: 6379
+          resources:          # <-- tutaj ustawiasz requests i limits
+            requests:
+              cpu: "100m"      # minimalne zasoby, które pod "rezerwuje"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"      # maksymalne zasoby, które pod może użyć
+              memory: "256Mi"
