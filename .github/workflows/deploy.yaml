@@ -2,7 +2,7 @@ name: Deploy MultiK8s
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   SHA: $(git rev-parse HEAD)
@@ -16,48 +16,48 @@ jobs:
       - name: Test
         run: |-
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t rallycoding/react-test -f ./client/Dockerfile.dev ./client
-          docker run -e CI=true rallycoding/react-test npm test
+          docker build -t mkumor/react-test -f ./client/Dockerfile.dev ./client
+          docker run -e CI=true mkumor/react-test npm test
 
-      - name: Set Service Key
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: '${{ secrets.GKE_SA_KEY }}'
+      # - name: Set Service Key
+      #   uses: 'google-github-actions/auth@v0'
+      #   with:
+      #     credentials_json: '${{ secrets.GKE_SA_KEY }}'
 
-      - name: Set Project
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: multi-338920
+      # - name: Set Project
+      #   uses: google-github-actions/setup-gcloud@v0
+      #   with:
+      #     project_id: multi-338920
 
-      - name: Auth
-        run: |-
-          gcloud --quiet auth configure-docker
+      # - name: Auth
+      #   run: |-
+      #     gcloud --quiet auth configure-docker
 
-      - name: Get Credentials
-        uses: google-github-actions/get-gke-credentials@v0
-        with:
-          cluster_name: multi-cluster
-          location: us-central1-c
+      # - name: Get Credentials
+      #   uses: google-github-actions/get-gke-credentials@v0
+      #   with:
+      #     cluster_name: multi-cluster
+      #     location: us-central1-c
 
       - name: Build
         run: |-
-          docker build -t rallycoding/multi-client-k8s-gh:latest -t rallycoding/multi-client-k8s-gh:${{ env.SHA }} -f ./client/Dockerfile ./client
-          docker build -t rallycoding/multi-server-k8s-gh:latest -t rallycoding/multi-server-k8s-gh:${{ env.SHA }} -f ./server/Dockerfile ./server
-          docker build -t rallycoding/multi-worker-k8s-gh:latest -t rallycoding/multi-worker-k8s-gh:${{ env.SHA }} -f ./worker/Dockerfile ./worker
+          docker build -t mkumor/multi-client-k8s:latest -t mkumor/multi-client-k8s:${{ env.SHA }} -f ./client/Dockerfile ./client
+          docker build -t mkumor/multi-server-k8s:latest -t mkumor/multi-server-k8s:${{ env.SHA }} -f ./server/Dockerfile ./server
+          docker build -t mkumor/multi-worker-k8s:latest -t mkumor/multi-worker-k8s:${{ env.SHA }} -f ./worker/Dockerfile ./worker
 
       - name: Push
         run: |-
-          docker push rallycoding/multi-client-k8s-gh:latest
-          docker push rallycoding/multi-server-k8s-gh:latest
-          docker push rallycoding/multi-worker-k8s-gh:latest
+          docker push mkumor/multi-client-k8s:latest
+          docker push mkumor/multi-server-k8s:latest
+          docker push mkumor/multi-worker-k8s:latest
 
-          docker push rallycoding/multi-client-k8s-gh:${{ env.SHA }}
-          docker push rallycoding/multi-server-k8s-gh:${{ env.SHA }}
-          docker push rallycoding/multi-worker-k8s-gh:${{ env.SHA }}
+          docker push mkumor/multi-client-k8s:${{ env.SHA }}
+          docker push mkumor/multi-server-k8s:${{ env.SHA }}
+          docker push mkumor/multi-worker-k8s:${{ env.SHA }}
 
-      - name: Apply
-        run: |-
-          kubectl apply -f k8s
-          kubectl set image deployments/server-deployment server=rallycoding/multi-server-k8s-gh:${{ env.SHA }}
-          kubectl set image deployments/client-deployment client=rallycoding/multi-client-k8s-gh:${{ env.SHA }}
-          kubectl set image deployments/worker-deployment worker=rallycoding/multi-worker-k8s-gh:${{ env.SHA }}
+      # - name: Apply
+      #   run: |-
+      #     kubectl apply -f k8s
+      #     kubectl set image deployments/server-deployment server=mkumor/multi-server-k8s:${{ env.SHA }}
+      #     kubectl set image deployments/client-deployment client=mkumor/multi-client-k8s:${{ env.SHA }}
+      #     kubectl set image deployments/worker-deployment worker=mkumor/multi-worker-k8s:${{ env.SHA }}
