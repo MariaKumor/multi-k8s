@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: web
-          image: mkumor/multi-client:v3
+          image: mkumor/multi-client-k8s:latest
           ports:
             - containerPort: 3000

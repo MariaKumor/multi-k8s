@@ -60,5 +60,5 @@ jobs:
           kubectl apply -f k8s/kubernetes-dashboard-namespace.yaml
           kubectl apply -f k8s
           kubectl set image deployments/server-deployment server=mkumor/multi-server-k8s:${{ env.SHA }}
-          kubectl set image deployments/client-deployment client=mkumor/multi-client-k8s:${{ env.SHA }}
+          kubectl set image deployments/client-deployment web=mkumor/multi-client-k8s:${{ env.SHA }}
           kubectl set image deployments/worker-deployment worker=mkumor/multi-worker-k8s:${{ env.SHA }}

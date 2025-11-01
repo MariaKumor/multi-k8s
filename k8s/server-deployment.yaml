@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: mkumor/multi-server:v3
+          image: mkumor/multi-server-k8s:latest
           ports:
             - containerPort: 5000
           env:
